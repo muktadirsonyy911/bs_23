@@ -1,4 +1,4 @@
 class NetworkConstant{
-  static const String baseUrl = "";
-  static const String homeUrl = "${baseUrl}home";
+  static const String baseUrl = "https://api.github.com/";
+  static const String homeUrl = "${baseUrl}search/repositories?q=Flutter";
 }

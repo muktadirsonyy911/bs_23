@@ -16,8 +16,13 @@ class Initializer {
 
   void init(VoidCallback runApp) {
     runZonedGuarded(() async {
+
+      //To ensure that you can perform any necessary preparations before starting your app.
       WidgetsFlutterBinding.ensureInitialized();
+
+      // To get rid of from handshake error
       HttpOverrides.global = MyHttpOverrides();
+
       FlutterError.onError = (details) {
         FlutterError.dumpErrorToConsole(details);
         Logcat.msg(details.stack.toString());
