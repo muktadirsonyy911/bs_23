@@ -11,12 +11,12 @@ class AppPages {
   static final List<GetPage> routes = [
     GetPage(
       name: _Paths.home,
-      page: () => const HomeView(),
+      page: () =>  HomeView(),
       binding: HomeBinding(),
     ),
     GetPage(
       name: _Paths.details,
-      page: () => const DetailsView(),
+      page: () =>  DetailsView(),
       binding: DetailsBinding(),
     ),
   ];

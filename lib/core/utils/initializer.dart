@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:bs_23/core/services/common_data_session_service.dart';
+import 'package:bs_23/core/services/internet_connectivity_service.dart';
 import 'package:bs_23/core/services/theme_service.dart';
 import 'package:bs_23/core/utils/logcat.dart';
 import 'package:flutter/material.dart';
@@ -56,8 +58,10 @@ class Initializer {
     ]);
   }
 
-  void _initOthers()  {
+  void _initOthers()  async {
    Get.put(ThemeService());
+   Get.put(InternetConnectivityService());
+   await Get.putAsync<CommonDataSessionService>(() async => CommonDataSessionService());
   }
 }
 

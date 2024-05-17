@@ -13,9 +13,9 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   HomeRemoteDataSourceImpl({required this.dio});
 
   @override
-  Future<List<GitRepoModel>> getGitRepo() async {
+  Future<List<GitRepoModel>> getGitRepo({int page=1}) async {
     try {
-      final Response response = await dio.get(NetworkConstant.homeUrl);
+      final Response response = await dio.get(NetworkConstant.getRepoList(page: page));
       if (response.data == null) {
         throw ServerException("Unknown Error", response.statusCode);
       }

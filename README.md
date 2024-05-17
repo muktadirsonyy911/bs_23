@@ -1,16 +1,23 @@
-# bs_23
+# bs_flutter_task_Muktadir
 
-A new Flutter project.
+Flutter Task.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1. The project has been implemented in clean architecture.
+2. There are three layers(data,domain,presentation) to write the code separately.
+3. Data layer contains - DataSources, Models and Repositories
+4. Domain layer is the midman of data and presentation layer which contains business logics and should be independent from other layers. It contains - Entities, Repositories and UseCases
+5. Presentation layer contains - Controllers, Views, Widgets, Bindings 
+6. I have used Getx for Dependency Management, Route Management and State Management
+8. For storing data locally i have used Sqlite database and get storage for small data
+9. I have strictly followed SOLID PRINCIPLES in this project
 
-A few resources to get you started if this is your first Flutter project:
+## Screenshots
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+![Alt text](assets/images/1.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Alt text](assets/images/2.png)
+
+
+

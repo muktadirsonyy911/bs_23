@@ -1,10 +1,14 @@
 import 'package:bs_23/core/local_storage/storage_helper.dart';
 import 'package:bs_23/core/network/error/failures.dart';
+import 'package:bs_23/core/services/internet_connection_service.dart';
 import 'package:bs_23/core/styles/app_colors.dart';
+import 'package:bs_23/core/utils/logcat.dart';
+import 'package:bs_23/features/home/data/data_sources/local/ds_impl/git_repo_local_data_source_impl.dart';
 import 'package:bs_23/features/home/data/data_sources/remote/home_remote_data_source_impl.dart';
 import 'package:bs_23/features/home/data/repositories/home_repository_impl.dart';
 import 'package:bs_23/features/home/domain/entities/git_repo_entity.dart';
 import 'package:bs_23/features/home/domain/uses_cases/home_use_case.dart';
+import 'package:bs_23/routes/app_pages.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -12,15 +16,27 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
+  ///For Theme
   final Rx<ThemeMode> selectedThemeMode = ThemeMode.light.obs;
+
+  ///For RepoList
   RxList<GitRepoEntity> gitRepoList = <GitRepoEntity>[].obs;
   RxBool gitRepoDataLoaded = false.obs;
+
+  ///For Pagination
+  final ScrollController scrollController = ScrollController();
+  RxBool isLoading = false.obs;
+  RxInt pageNo = 1.obs;
+
+  late InternetConnectionService _internetConnectionService;
 
   @override
   void onInit() {
     super.onInit();
+    _internetConnectionService = InternetConnectionService();
     initThemeMode();
-    _getGitRepo();
+    scrollController.addListener(_loadMoreData);
+    fetchRepositories();
   }
 
   void initThemeMode() {
@@ -53,15 +69,62 @@ class HomeController extends GetxController {
     StorageHelper.setTheme = themeMode.toString();
   }
 
-  void _getGitRepo() async {
-    HomeRepositoryImpl homeRepository = HomeRepositoryImpl(homeRemoteDataSource: HomeRemoteDataSourceImpl(dio: Dio()));
-    final  Either<Failure, List<GitRepoEntity>> responseData = await HomeUseCase(homeRepository: homeRepository).call();
+  Future<void> fetchRepositories() async {
+    bool hasInternet = await _internetConnectionService.checkInternet();
+    if (hasInternet == true) {
+      _fetchRepos();
+    } else {
+      fetchReposFromLocal();
+    }
+  }
 
-    responseData.fold((Failure l) {
-      Get.rawSnackbar(message: l.errorMessage, backgroundColor: AppColors.red);
-    }, ( List<GitRepoEntity> r) {
-      gitRepoList.value = r;
+  Future<void> _loadMoreData() async {
+    isLoading.value = true;
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+      pageNo.value = pageNo.value + 1;
+
+      debugPrint('HomeController._loadMoreData:${pageNo.value}');
+
+      HomeRepositoryImpl homeRepository = HomeRepositoryImpl(
+          homeRemoteDataSource: HomeRemoteDataSourceImpl(dio: Dio()), homeLocalDatasource: HomeLocalDataSourceImpl());
+      final Either<Failure, List<GitRepoEntity>> responseData =
+          await HomeUseCase(homeRepository: homeRepository).getRepoFromRemote(page: pageNo.value);
+
+      isLoading.value = false;
+      responseData.fold((failure) {
+        Logcat.msg(failure.errorMessage);
+      }, (repos) {
+        gitRepoList.addAll(repos);
+      });
+    }
+  }
+
+  Future<void> _fetchRepos() async {
+    HomeRepositoryImpl homeRepository = HomeRepositoryImpl(
+        homeRemoteDataSource: HomeRemoteDataSourceImpl(dio: Dio()), homeLocalDatasource: HomeLocalDataSourceImpl());
+    final Either<Failure, List<GitRepoEntity>> responseData =
+        await HomeUseCase(homeRepository: homeRepository).getRepoFromRemote(page: pageNo.value);
+
+    responseData.fold((Failure failure) {
+      Logcat.msg(failure.errorMessage);
+    }, (repos) {
+      gitRepoList.assignAll(repos);
     });
     gitRepoDataLoaded.value = true;
   }
+
+  Future<void> fetchReposFromLocal() async {
+    HomeRepositoryImpl homeRepository = HomeRepositoryImpl(
+        homeRemoteDataSource: HomeRemoteDataSourceImpl(dio: Dio()), homeLocalDatasource: HomeLocalDataSourceImpl());
+    final Either<Failure, List<GitRepoEntity>> responseData =
+        await HomeUseCase(homeRepository: homeRepository).getRepoFromLocal();
+    responseData.fold((failure) {
+      Logcat.msg(failure.errorMessage);
+    }, (repos) {
+      gitRepoList.assignAll(repos);
+    });
+    gitRepoDataLoaded.value = true;
+  }
+
+  void onRepoTap({required GitRepoEntity gitRepo}) => Get.toNamed(Routes.details, arguments: gitRepo);
 }
