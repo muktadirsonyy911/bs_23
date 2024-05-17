@@ -1,13 +1,29 @@
-import 'package:bs_23/features/home/domain/entities/sub_entitites.dart';
 
-class GitRepoEntity {
-  final int? totalCount;
-  final bool? incompleteResults;
-  final List<GitSubRepoEntity>? items;
+class GitRepoEntity{
+  int id;
+  String name;
+  String ownerName;
+  String? ownerPhoto;
+  int starCount;
+  String? description;
+  String? url;
+  String? ownerGit;
+  String updatedAt;
 
-  GitRepoEntity({
-    this.totalCount,
-    this.incompleteResults,
-    this.items,
-  });
+  GitRepoEntity(
+      {required this.id,
+        required this.name,
+        required this.ownerName,
+        this.ownerPhoto,
+        required this.starCount,
+        this.description,
+        this.url,
+        this.ownerGit,
+        required this.updatedAt});
+
+
+
+
+
+
 }

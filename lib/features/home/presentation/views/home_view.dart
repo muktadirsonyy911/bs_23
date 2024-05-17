@@ -2,7 +2,6 @@ import 'package:bs_23/core/styles/app_colors.dart';
 import 'package:bs_23/core/styles/text_style.dart';
 import 'package:bs_23/core/widgets/common_app_bar_widget.dart';
 import 'package:bs_23/core/widgets/not_found_widget.dart';
-import 'package:bs_23/features/home/domain/entities/sub_entitites.dart';
 import 'package:bs_23/features/home/presentation/controllers/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +28,7 @@ class HomeView extends GetView<HomeController> {
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
-              GitSubRepoEntity repo = controller.gitRepoList[index];
+              var repo = controller.gitRepoList[index];
               return Text("${repo.name}", style: StyleText.size18Bold700);
             });
       }),

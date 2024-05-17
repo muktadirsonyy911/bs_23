@@ -8,7 +8,7 @@ class HomeUseCase {
   final HomeRepository homeRepository;
   HomeUseCase({required this.homeRepository});
 
-  Future<Either<Failure, GitRepoEntity>> call() async {
+  Future<Either<Failure, List<GitRepoEntity>>> call() async {
     final result = await homeRepository.getGitRepo();
     return result.fold((l) {
       return Left(l);

@@ -4,5 +4,5 @@ import 'package:bs_23/features/home/data/models/git_repo_model.dart';
 import 'package:dio/dio.dart';
 
 abstract interface class HomeRemoteDataSource{
-  Future<GitRepoModel> getGitRepo();
+  Future<List<GitRepoModel>> getGitRepo();
 }

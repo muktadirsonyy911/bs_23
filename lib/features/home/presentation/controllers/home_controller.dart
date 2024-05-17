@@ -4,7 +4,6 @@ import 'package:bs_23/core/styles/app_colors.dart';
 import 'package:bs_23/features/home/data/data_sources/remote/home_remote_data_source_impl.dart';
 import 'package:bs_23/features/home/data/repositories/home_repository_impl.dart';
 import 'package:bs_23/features/home/domain/entities/git_repo_entity.dart';
-import 'package:bs_23/features/home/domain/entities/sub_entitites.dart';
 import 'package:bs_23/features/home/domain/uses_cases/home_use_case.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -14,7 +13,7 @@ import 'package:get/get.dart';
 
 class HomeController extends GetxController {
   final Rx<ThemeMode> selectedThemeMode = ThemeMode.light.obs;
-  RxList<GitSubRepoEntity> gitRepoList = <GitSubRepoEntity>[].obs;
+  RxList<GitRepoEntity> gitRepoList = <GitRepoEntity>[].obs;
   RxBool gitRepoDataLoaded = false.obs;
 
   @override
@@ -56,12 +55,12 @@ class HomeController extends GetxController {
 
   void _getGitRepo() async {
     HomeRepositoryImpl homeRepository = HomeRepositoryImpl(homeRemoteDataSource: HomeRemoteDataSourceImpl(dio: Dio()));
-    final Either<Failure, GitRepoEntity> responseData = await HomeUseCase(homeRepository: homeRepository).call();
+    final  Either<Failure, List<GitRepoEntity>> responseData = await HomeUseCase(homeRepository: homeRepository).call();
 
     responseData.fold((Failure l) {
       Get.rawSnackbar(message: l.errorMessage, backgroundColor: AppColors.red);
-    }, (GitRepoEntity r) {
-      gitRepoList.value = r.items ?? [];
+    }, ( List<GitRepoEntity> r) {
+      gitRepoList.value = r;
     });
     gitRepoDataLoaded.value = true;
   }

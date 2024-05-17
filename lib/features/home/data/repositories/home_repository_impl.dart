@@ -10,9 +10,9 @@ class HomeRepositoryImpl implements HomeRepository {
   HomeRepositoryImpl({required this.homeRemoteDataSource});
 
   @override
-  Future<Either<Failure, GitRepoModel>> getGitRepo() async {
+  Future<Either<Failure, List<GitRepoModel>>> getGitRepo() async {
     try {
-      final GitRepoModel result = await homeRemoteDataSource.getGitRepo();
+      final  List<GitRepoModel> result = await homeRemoteDataSource.getGitRepo();
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message, e.statusCode));
