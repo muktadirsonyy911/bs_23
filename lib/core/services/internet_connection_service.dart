@@ -5,7 +5,7 @@ class InternetConnectionService {
   Future<bool> checkInternet() async {
     bool result = await InternetConnectionCheckerPlus().hasConnection;
     if (result == true) {
-      Logcat.msg('YAY! Free cute dog pics!');
+      Logcat.msg("YES");
     } else {
       Logcat.msg('No internet');
     }

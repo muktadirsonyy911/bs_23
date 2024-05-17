@@ -3,7 +3,6 @@ import 'package:bs_23/core/services/internet_connectivity_service.dart';
 import 'package:bs_23/core/widgets/global_widgets.dart';
 import 'package:bs_23/features/home/domain/entities/git_repo_entity.dart';
 import 'package:bs_23/features/home/presentation/controllers/home_controller.dart';
-import 'package:bs_23/routes/app_pages.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

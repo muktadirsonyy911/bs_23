@@ -1,10 +1,5 @@
 import 'package:bs_23/core/extensions/date_extensions.dart';
-import 'package:bs_23/core/extensions/extension_num.dart';
 import 'package:bs_23/core/services/internet_connectivity_service.dart';
-import 'package:bs_23/core/styles/app_colors.dart';
-import 'package:bs_23/core/widgets/common_app_bar_widget.dart';
-import 'package:bs_23/features/details/presentation/widgets/git_repo_widget.dart';
-import 'package:bs_23/features/home/domain/entities/git_repo_entity.dart';
 import 'package:bs_23/routes/app_pages.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +71,7 @@ class HomeView extends GetView<HomeController> {
                                       color: Colors.grey.withOpacity(0.1),
                                       spreadRadius: 1,
                                       blurRadius: 7,
-                                      offset: Offset(0, 1), // changes position of shadow
+                                      offset: const Offset(0, 1), // changes position of shadow
                                     ),
                                   ]
                               ),
@@ -101,7 +96,7 @@ class HomeView extends GetView<HomeController> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                  DateTime.parse(controller.gitRepoList[index].updatedAt??'').toFormattedTime,
+                                                  DateTime.parse(controller.gitRepoList[index].updatedAt).toFormattedTime,
                                                   maxLines: 1,
                                                   style: Get.textTheme.bodySmall!.merge(
                                                     TextStyle(color: Get.theme.primaryColor, height: 1.4),
@@ -109,7 +104,7 @@ class HomeView extends GetView<HomeController> {
                                                   softWrap: false,
                                                   textAlign: TextAlign.center,
                                                   overflow: TextOverflow.fade),
-                                              Text(    DateTime.parse(controller.gitRepoList[index].updatedAt??'').toFormattedDay,
+                                              Text(    DateTime.parse(controller.gitRepoList[index].updatedAt).toFormattedDay,
                                                   maxLines: 1,
                                                   style: Get.textTheme.headlineMedium!.merge(
                                                     TextStyle(color: Get.theme.primaryColor, height: 1),
@@ -117,7 +112,7 @@ class HomeView extends GetView<HomeController> {
                                                   softWrap: false,
                                                   textAlign: TextAlign.center,
                                                   overflow: TextOverflow.fade),
-                                              Text(    DateTime.parse(controller.gitRepoList[index].updatedAt??'').toFormattedMonth,
+                                              Text(    DateTime.parse(controller.gitRepoList[index].updatedAt).toFormattedMonth,
                                                   maxLines: 1,
                                                   style: Get.textTheme.bodySmall!.merge(
                                                     TextStyle(color: Get.theme.primaryColor, height: 1),
@@ -143,7 +138,7 @@ class HomeView extends GetView<HomeController> {
                                             children: [
                                               Expanded(
                                                 child: Text(
-                                                  controller.gitRepoList[index].name??'',
+                                                  controller.gitRepoList[index].name,
                                                   style: Get.textTheme.headlineSmall,
                                                   maxLines: 3,
                                                   // textAlign: TextAlign.end,
@@ -162,7 +157,7 @@ class HomeView extends GetView<HomeController> {
                                               const SizedBox(width: 5),
                                               Flexible(
                                                 child: Text(
-                                                  controller.gitRepoList[index].ownerName??'',
+                                                  controller.gitRepoList[index].ownerName,
                                                   maxLines: 1,
                                                   overflow: TextOverflow.fade,
                                                   softWrap: false,
@@ -244,33 +239,6 @@ class HomeView extends GetView<HomeController> {
 
         ],
       ),
-    );
-      Scaffold(
-      appBar: CommonAppBarWidget(title: "Repositories", actions: [
-        Padding(
-          padding: 5.rightPadding,
-          child: InkResponse(
-            onTap: ()=>controller.changeThemeMode(themeMode: Get.isDarkMode?ThemeMode.light:ThemeMode.dark),
-              child: const Icon(Icons.sunny, color: AppColors.blue)),
-        )
-      ],),
-      body: Obx(() {
-        if (controller.gitRepoDataLoaded.isTrue) {
-          return ListView.builder(
-            controller: controller.scrollController,
-            itemCount: controller.gitRepoList.length,
-            itemBuilder: (BuildContext context, int index) {
-              GitRepoEntity repo = controller.gitRepoList[index];
-              return GitRepoWidget(gitRepo: repo, index: index);
-            },
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(
-            ),
-          );
-        }
-      }),
     );
 
   }
